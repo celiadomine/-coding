@@ -1,0 +1,19 @@
+#pongArea {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    background-color: black;
+    margin: auto;
+}
+#paddle, #ball {
+    position: absolute;
+    background-color: white;
+}
+#paddle {
+    width: 10px;
+    height: 100px;
+}
+#ball {
+    width: 10px;
+    height: 10px;
+}
