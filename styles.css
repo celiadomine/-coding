@@ -3,8 +3,10 @@
     width: 800px;
     height: 400px;
     background-color: #000;
-    margin: auto;
+    margin-left: 30px;
     display: block;
+    font-family: Sans MS, Comic Sans, cursive;
+    font-weight: bold;
 }
 
 #paddle, #ball {
@@ -17,10 +19,14 @@
     width: 10px;
     height: 100px;
     background-color: #00ccff;
+    left: 20px;
+    top: 150px;
 }
 
 #ball {
     width: 10px;
     height: 10px;
     background-color: #fff;
+    left: 50%;
+    top: 50%;
 }

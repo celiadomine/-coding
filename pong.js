@@ -6,18 +6,18 @@ let score = 0;
 
 function moveBall() {
     let ballRect = ball.getBoundingClientRect();
-    let leftPaddleRect = leftPaddle.getBoundingClientRect();
+    let paddleRect = paddle.getBoundingClientRect();
     
     // Update ball position
-    ball.style.left = ballRect.left + ballSpeedX + 'px';
-    ball.style.top = ballRect.top + ballSpeedY + 'px';
+    ball.style.left = (ball.offsetLeft + ballSpeedX) + 'px';
+    ball.style.top = (ball.offsetTop + ballSpeedY) + 'px';
 
     // Collision detection with top and bottom
-    if (ballRect.bottom >= window.innerHeight || ballRect.top <= 0) {
+    if (ball.offsetTop + ball.clientHeight >= window.innerHeight || ball.offsetTop <= 0) {
         ballSpeedY = -ballSpeedY;
     }
 
-    // Collision detection with left paddle
+    // Collision detection with paddle
     if (ballRect.left <= paddleRect.right &&
         ballRect.top >= paddleRect.top &&
         ballRect.bottom <= paddleRect.bottom) {
@@ -26,25 +26,30 @@ function moveBall() {
         console.log("Score:", score);
     }
 
-    // Reset ball if it passes the left paddle
+    // Reset ball if it passes the paddle
     if (ballRect.right <= 0) {
-        ball.style.left = '50%';
-        ball.style.top = '50%';
-        score = 0; // Reset score
-        console.log("Missed! Score reset.");
+        resetBall();
     }
 
     requestAnimationFrame(moveBall);
 }
 
+function resetBall() {
+    let pongAreaRect = document.getElementById('pongArea').getBoundingClientRect();
+    ball.style.left = pongAreaRect.width / 2 - ball.clientWidth / 2 + 'px';
+    ball.style.top = pongAreaRect.height / 2 - ball.clientHeight / 2 + 'px';
+    score = 0; // Reset score
+    console.log("Missed! Score reset.");
+}
+
 moveBall();
 
 function keyDownHandler(event) {
-    let leftPaddleRect = leftPaddle.getBoundingClientRect();
+    let paddleRect = paddle.getBoundingClientRect();
     if (event.key == "ArrowUp") {
-        leftPaddle.style.top = Math.max(0, leftPaddleRect.top - 20) + 'px';
+        paddle.style.top = Math.max(0, paddle.offsetTop - 20) + 'px';
     } else if (event.key == "ArrowDown") {
-        leftPaddle.style.top = Math.min(window.innerHeight - leftPaddleRect.height, leftPaddleRect.top + 20) + 'px';
+        paddle.style.top = Math.min(window.innerHeight - paddleRect.height, paddle.offsetTop + 20) + 'px';
     }
 }
 
