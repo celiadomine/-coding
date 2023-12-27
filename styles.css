@@ -2,18 +2,25 @@
     position: relative;
     width: 800px;
     height: 400px;
-    background-color: black;
+    background-color: #000;
     margin: auto;
+    display: block;
 }
+
 #paddle, #ball {
     position: absolute;
-    background-color: white;
+    display: block;
+   
 }
+
 #paddle {
     width: 10px;
     height: 100px;
+    background-color: #00ccff;
 }
+
 #ball {
     width: 10px;
     height: 10px;
+    background-color: #fff;
 }
