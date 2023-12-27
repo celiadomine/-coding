@@ -1,56 +1,53 @@
-let paddle = document.getElementById('paddle');
-let ball = document.getElementById('ball');
+const BOX = window.innerHeight;
 
-let ballSpeedX = 2, ballSpeedY = 2;
-let score = 0;
+let canvas;
+let ctxt;
+let ball;
 
-function moveBall() {
-    let ballRect = ball.getBoundingClientRect();
-    let paddleRect = paddle.getBoundingClientRect();
-    
-    // Update ball position
-    ball.style.left = (ball.offsetLeft + ballSpeedX) + 'px';
-    ball.style.top = (ball.offsetTop + ballSpeedY) + 'px';
+window.onload = function () {
+    canvas = document.getElementById("canvas");
+    canvas.width = BOX;
+    canvas.height = BOX;
+    ctxt = canvas.getContext("2d");
 
-    // Collision detection with top and bottom
-    if (ball.offsetTop + ball.clientHeight >= window.innerHeight || ball.offsetTop <= 0) {
-        ballSpeedY = -ballSpeedY;
+    loop();
+};
+
+function loop() {
+    ctxt.fillStyle = "black"; // Background color
+    ctxt.fillRect(0, 0, BOX, BOX);
+    for (let ball of balls) {
+        ball.render(ctxt);
+        ball.update();
     }
-
-    // Collision detection with paddle
-    if (ballRect.left <= paddleRect.right &&
-        ballRect.top >= paddleRect.top &&
-        ballRect.bottom <= paddleRect.bottom) {
-        ballSpeedX = -ballSpeedX;
-        score++; // Increment score
-        console.log("Score:", score);
-    }
-
-    // Reset ball if it passes the paddle
-    if (ballRect.right <= 0) {
-        resetBall();
-    }
-
-    requestAnimationFrame(moveBall);
+    requestAnimationFrame(loop);
 }
 
-function resetBall() {
-    let pongAreaRect = document.getElementById('pongArea').getBoundingClientRect();
-    ball.style.left = pongAreaRect.width / 2 - ball.clientWidth / 2 + 'px';
-    ball.style.top = pongAreaRect.height / 2 - ball.clientHeight / 2 + 'px';
-    score = 0; // Reset score
-    console.log("Missed! Score reset.");
-}
+class Ball {
+    constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.xSpeed = Math.random() * 2 - 1; // Speed in x-direction
+        this.ySpeed = 0; // No vertical movement
+        this.color = `hsl(${Math.floor(Math.random() * 360)}, 50%, 50%)`;
+    }
 
-moveBall();
+    render(ctxt) {
+        ctxt.fillStyle = this.color;
+        ctxt.beginPath();
+        ctxt.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
+        ctxt.fill();
+        ctxt.stroke();
+    }
 
-function keyDownHandler(event) {
-    let paddleRect = paddle.getBoundingClientRect();
-    if (event.key == "ArrowUp") {
-        paddle.style.top = Math.max(0, paddle.offsetTop - 20) + 'px';
-    } else if (event.key == "ArrowDown") {
-        paddle.style.top = Math.min(window.innerHeight - paddleRect.height, paddle.offsetTop + 20) + 'px';
+    update() {
+        this.x += this.xSpeed;
+
+        // Collision detection for left and right walls
+        if (this.x < this.r || this.x > BOX - this.r) {
+            this.xSpeed = -this.xSpeed;
+        }
     }
 }
 
-document.addEventListener("keydown", keyDownHandler);
